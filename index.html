@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+
+<html>
+    <title>
+        Calculator
+    </title>
+    <head>
+        <link rel="stylesheet" type="text/css" href="css/reset.css">
+        <link rel="stylesheet" type="text/css" href="css/style.css">
+        <link href="https://fonts.googleapis.com/css?family=Orbitron:400,500" rel="stylesheet">
+    </head>
+
+    <body>
+            <div class = 'calculator'>
+                <div class='dial'>0</div>
+                <div class='keypad'>
+                    <div class='key' id='ac' data-key='27'>AC</div>
+                    <div class='key' id = 'clear' data-key='8'>C</div>
+                    <div class='key' id='posNeg'>+/-</div>
+                    <div class='key operator' data-key='191'>/</div>
+                    <div class='key digit' data-key='55'>7</div>
+                    <div class='key digit' data-key='56'>8</div>
+                    <div class='key digit' data-key='57'>9</div>
+                    <div class='key operator' data-key='56'>x</div>
+                    <div class='key digit' data-key='52'>4</div>
+                    <div class='key digit' data-key='53'>5</div>
+                    <div class='key digit' data-key='54'>6</div>
+                    <div class='key operator' data-key='189'>-</div>
+                    <div class='key digit' data-key='49'>1</div>
+                    <div class='key digit' data-key='50'>2</div>
+                    <div class='key digit' data-key='51'>3</div>
+                    <div class='key operator' id='add' data-key='187'>+</div>
+                    <div class='key dot' data-key='190'>.</div>
+                    <div class='key digit' data-key='48'>0</div>
+                    <div class='key equal' data-key='187'>=</div>
+                </div>
+            </div>
+
+        <script>
+            const add = document.querySelector('#add');
+            const keys = Array.from(document.querySelectorAll('.key'));
+            const digits = Array.from(document.querySelectorAll('.digit'));
+            const operators = Array.from(document.querySelectorAll('.operator'));
+            const ac = document.querySelector('#ac');
+            const dial = document.querySelector('.dial');
+            const clear = document.querySelector('#clear');
+            const posNeg = document.querySelector('#posNeg');
+            const equals = document.querySelector('.equal');
+            const dot = document.querySelector('.dot');
+            let op = ''; //operator variable
+            let argument1; //first argument of the equation to be calculated
+            let argument2; //second argument of the equation to be calculated
+            let isNegativeNo = false; //check if value is a negative number
+            let result;
+            let lastOperator = false; //checks if the last key pressed was an operator
+            let isBlocked = false; //blocks the dial 
+            let isFloat = false; //checking if dot key has been already used for an argument
+
+            function keyDown(key) {
+                key.style.backgroundImage = "url('images/button_down.png')";
+                key.style.paddingTop = '20px';
+            }
+
+            function keyUp(key) {
+                key.style.backgroundImage = "url('images/button_up.png')";
+                key.style.paddingTop = '17px';
+            }
+            
+            function addDigit(digit) {
+                if (isBlocked == true) {
+                    return;
+                } else {
+                    if (lastOperator == true) {
+                        clearDial();
+                        isFloat = false;
+                        lastOperator = false;
+                    } if (dial.textContent == 0 && digit.dataKey != '48' && dial.textContent[1] != '.') {
+                        dial.textContent = digit.textContent;
+                    } else if (dial.textContent.length < 5) {
+                        dial.textContent += digit.textContent;
+                    } else if (dial.textContent.length < 7) {
+                        dial.textContent += digit.textContent;
+                        resize();
+                    } else if (dial.textContent.length >= 7 && dial.textContent.length < 9) {
+                        dial.textContent += digit.textContent;
+                        resize();
+                    } else if (dial.textContent.length > 9) {
+                        return;
+                    }
+                }
+            };
+
+            function resize() {
+                if (dial.textContent.length < 5) {
+                    dial.style.fontSize = '80px';
+                } else if (dial.textContent.length < 8) {
+                    dial.style.fontSize = '72px';
+                } else if (dial.textContent.length >= 8) {
+                    dial.style.fontSize = '59px';
+                }
+            };
+
+            function neg() {
+                if (isBlocked == true) {
+                    return
+                } else {
+                    if (lastOperator == true && dial.textContent == '0') {
+                        dial.textContent = '-';
+                        isNegativeNo = true;
+                        lastOperator = false;
+                        return;
+                    }
+                    if (lastOperator == true && dial.textContent != '0') {
+                        dial.textContent = '-';
+                        isNegativeNo = true;
+                        lastOperator = false;
+                        return;
+                    }
+                    if (dial.textContent == 0) {
+                        dial.textContent = 0;
+                        isNegativeNo = false;
+                    } else {
+                        if (isNegativeNo == false) {
+                            dial.textContent = '-' + dial.textContent; 
+                            isNegativeNo = true;
+                        } else {
+                            dial.textContent = dial.textContent.substr(1); 
+                            isNegativeNo = false;
+                        }
+                    }   
+                }
+            }
+
+            function clearDial() {
+                dial.textContent = '0';
+                dial.style.fontSize = '80px';
+            }
+
+            function addition(arg1, arg2) {
+                result = parseFloat(arg1) + parseFloat(arg2);
+                result = result.toString();
+                if (result.length > 9) {
+                    result = parseFloat(result);
+                    result = result.toFixed(1);
+                }
+                return result;
+            }
+
+            function substraction(arg1, arg2) {
+                return result = parseFloat(arg1) - parseFloat(arg2);
+            }
+
+            function multiplication(arg1, arg2) {
+                return result = parseFloat(arg1) * parseFloat(arg2);
+            }
+
+            function division(arg1, arg2) {
+                if(arg1 == 0 || arg2 == 0) {
+                    return result = 0;
+                } else {
+                    return result = parseFloat(arg1) / parseFloat(arg2);
+                }
+            }
+
+            function clearAll() {
+                argument1 = undefined;
+                argument2 = undefined;
+                result = undefined;
+                isNegativeNo = false;
+                isBlocked = false;
+                isFloat = false;
+            }
+
+            keys.forEach(key => key.addEventListener('mousedown', () => {
+                keyDown(key);
+            }));
+
+            keys.forEach(key => key.addEventListener('mouseup', () => {
+                keyUp(key);
+            }));
+
+            digits.forEach(digit => digit.addEventListener('mousedown', () => {
+                addDigit(digit);
+            }));
+
+            operators.forEach(operator => operator.addEventListener('click', () => {
+                if (isBlocked == true) {
+                    return
+                } else {
+                    lastOperator = true;
+                    isFloat = false;
+                    op = operator.textContent;
+                    if (argument1 == undefined) {
+                        argument1 = dial.textContent;
+                    }
+                }
+            }));
+
+            ac.addEventListener('mousedown', () => {
+                ac.style.backgroundImage = "url('images/ac_button_down.png')";
+                ac.style.paddingTop = '20px';
+            });
+
+            ac.addEventListener('mouseup', () => {
+                ac.style.backgroundImage = "url('images/ac_button_up.png')";
+                ac.style.paddingTop = '17px';
+                clearDial();
+                clearAll();
+            });
+
+            clear.addEventListener('click', () => {
+                if (isBlocked == true) {
+                    return;
+                } else {
+                    dial.textContent = dial.textContent.substring(0, dial.textContent.length -1);
+                    if (dial.textContent < 0.00000001 || dial.textContent == '-') {
+                        dial.textContent = '0'
+                        isNegativeNo = false; 
+                        isFloat = false;
+                    };
+                    resize();
+                }
+            });
+
+            add.addEventListener('mousedown', () => {
+                add.style.backgroundImage = "url('images/plus_button_down.png')";
+                add.style.paddingTop = '68px';
+            });
+
+            add.addEventListener('mouseup', () => {
+                add.style.backgroundImage = "url('images/plus_button_up.png')";
+                add.style.paddingTop = '65px';
+            });
+
+            equals.addEventListener('click', () => {
+                if (argument1 == undefined) {
+                    return;
+                } else if (argument2 == undefined) {
+                    argument2 = dial.textContent;
+                }
+                if (op == '+') {
+                    addition(argument1, argument2);
+                    dial.textContent = result;
+                }
+                if (op == '-') {
+                    substraction(argument1, argument2);
+                    dial.textContent = result;
+                }
+                if (op == 'x') {
+                    multiplication(argument1, argument2);
+                    dial.textContent = result;
+                }
+                if (op == '/') {
+                    division(argument1, argument2);
+                    dial.textContent = result;
+                }
+                if (dial.textContent.length > 9) {
+                    result = result.toExponential(1);
+                    dial.textContent = result;
+                    isBlocked = true;
+                }
+                resize();
+                (result < 0) ? isNegativeNo = true : isNegativeNo = false;
+                argument1 = undefined;
+                argument2 = undefined;
+                result = undefined;
+                isFloat = false;
+                lastOperator = true;
+            });
+
+            posNeg.addEventListener('click', () => {
+                neg();
+            });
+
+            dot.addEventListener('click', () => {
+                if (lastOperator == true) {
+                    dial.textContent = '0.';
+                    isFloat = true;
+                    lastOperator = false;
+                }
+                if (isFloat == true) {
+                    return;
+                } else if (dial.textContent == '0') {
+                    dial.textContent = '0.';
+                    isFloat = true;
+                } else {
+                    dial.textContent = dial.textContent + '.';
+                    isFloat = true;
+                }
+            });
+        </script>
+    </body>
+</html>

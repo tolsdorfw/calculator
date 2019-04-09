@@ -1,0 +1,73 @@
+
+
+* {
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+}
+
+body, html {
+    height: 100%;
+    margin: 0;
+}
+
+.calculator {
+    background-image: url('../images/calculator.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    height: 1002px;
+    position: relative;
+}
+
+.dial {
+    height: 127px;
+    line-height: 127px;
+    width: 500px; 
+    position: relative;
+    left: 92px;
+    top: 120px;
+    font-size: 80px;
+    font-family: 'Orbitron';
+    opacity: 0.5;
+    text-align: right;
+    padding-top: 10px;
+    padding-right: 8px;
+}
+
+.keypad {
+    display: grid;
+    grid-template: repeat(5, 72px) / repeat(4, 108px);
+    position: relative;
+    left: 65px;
+    top: 273px;
+    grid-gap: 37px;
+    font-family: 'Orbitron';
+    font-weight: bold;
+    color: white;
+    font-size: 40px;
+}
+
+.key {
+    background-image: url('../images/button_up.png');
+    padding: 17px;
+    font-size: 40px;
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+}
+
+#add {
+    grid-area: 4/4/6/4; 
+    padding-top: 65px; 
+    background-image: url('../images/plus_button_up.png');
+    
+}
+
+
+#ac{
+    background-image: url('../images/ac_button_up.png');
+    padding: 17px;
+    font-size: 40px;
+    text-align: center;
+}
+
